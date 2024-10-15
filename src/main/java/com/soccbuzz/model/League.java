@@ -17,8 +17,7 @@ public class League {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Match> matches;
 
     public Long getId() {

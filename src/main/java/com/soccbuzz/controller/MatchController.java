@@ -1,5 +1,6 @@
 package com.soccbuzz.controller;
 
+import com.soccbuzz.dto.MatchDTO;
 import com.soccbuzz.model.Match;
 import com.soccbuzz.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/matches")
@@ -17,14 +19,17 @@ public class MatchController {
     private MatchService matchService;
 
     @GetMapping
-    public List<Match> getAllMatches() {
-        return matchService.getAllMatches();
+    public List<MatchDTO> getAllMatches() {
+        List<Match> matches = matchService.getAllMatches();
+        List<MatchDTO> matchDTOS = matches.stream().map(match -> new MatchDTO(match.getId(), match.getHomeTeam(), match.getAwayTeam(), match.getLeague().getName())).collect(Collectors.toList());
+        return matchDTOS;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Match> getMatchById(@PathVariable Long id) {
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<MatchDTO> getMatchById(@PathVariable Long id) {
         Match match = matchService.getMatchById(id);
-        return ResponseEntity.ok(match);
+        MatchDTO matchDTO = new MatchDTO(match.getId(), match.getHomeTeam(), match.getAwayTeam(), match.getLeague().getName());
+        return ResponseEntity.ok(matchDTO);
     }
 
     @PostMapping
