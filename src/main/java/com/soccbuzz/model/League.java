@@ -1,5 +1,6 @@
 package com.soccbuzz.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,7 +17,8 @@ public class League {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "league")
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Match> matches;
 
     public Long getId() {
